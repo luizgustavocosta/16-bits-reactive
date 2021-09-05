@@ -1,0 +1,6 @@
+spring:
+  data:
+    mongodb:
+      uri: ${MONGO_REACTIVE}
+server:
+  port: 8082

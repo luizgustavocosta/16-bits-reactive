@@ -1,0 +1,15 @@
+<html>
+<body>
+<script>
+  window.addEventListener('load', function (event) {
+    var webSocket = new WebSocket("ws://localhost:8080/ws/greetings")
+    webSocket.addEventListener('open', function (event) {
+      webSocket.send('Reactive with websocket')
+    });
+    webSocket.addEventListener('message', function (event) {
+      console.log(event.data);
+    });
+  });
+</script>
+</body>
+</html>

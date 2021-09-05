@@ -1,0 +1,8 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgres://localhost:5432/bank
+    password: admin
+    username: admin
+  jpa:
+    hibernate:
+      ddl-auto: validate

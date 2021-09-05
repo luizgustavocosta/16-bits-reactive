@@ -1,0 +1,57 @@
+<!--Example from https://www.w3schools.com/html/tryit.asp?filename=tryhtml5_sse-->
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Getting server updates</h1>
+<div id="exampleOfStream"></div>
+<!--<script>-->
+<!--    source = new EventSource("http://localhost:8082/api/v1/users");-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+<script>
+  var source;
+  function setupEventSource() {
+    if (typeof(EventSource) !== "undefined") {
+      // Close  already connected to avoid duplicated messages
+      if (typeof(source) !== "undefined") {
+        source.close();
+      }
+
+      source = new EventSource("http://localhost:8082/api/v1/users");
+
+      source.onerror = function(event) {
+        console.log("SSE onerror " + JSON.parse(event.data));
+        if ( event.target.readyState == 2 ) {
+          // Clean up and reestablish connection
+          try {
+            source.close();
+          } catch ( err ) {
+            console.error("Catch["+err+"]")
+          }
+          setTimeout(function() { setupEventSource(); }, 1000);
+        }
+      }
+
+      source.onopen = function() {
+        console.log("SSE onopen");
+      }
+
+      source.onmessage = function(event) {
+        console.log("SSE onmessage: " + event.data);
+      }
+    }
+  else {
+      alert("Error: Server-Sent Events are not supported in your browser");
+    }
+  }
+  function onPageLoad() {
+    setupEventSource();
+  }
+
+  window.addEventListener("load", onPageLoad, true);
+</script>
+</body>
+</html>
