@@ -2,8 +2,8 @@ package com.costa.luiz.reactive.airbnb.infrastructure;
 
 import com.costa.luiz.reactive.airbnb.infrastructure.review.ReactiveReviewRepository;
 import com.costa.luiz.reactive.airbnb.infrastructure.user.ReactiveUserRepository;
-import com.costa.luiz.reactive.airbnb.model.review.ReviewRepository;
 import com.costa.luiz.reactive.airbnb.model.review.Review;
+import com.costa.luiz.reactive.airbnb.model.review.ReviewRepository;
 import com.costa.luiz.reactive.airbnb.model.user.User;
 import com.costa.luiz.reactive.airbnb.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

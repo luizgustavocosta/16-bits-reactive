@@ -46,7 +46,7 @@ class GreetingWebSocketConfiguration {
             Flux<GreetingResponse> greetingResponseFlux = requestFlux.flatMap(service::greet);
             Flux<String> response = greetingResponseFlux.map(GreetingResponse::getMessage); //Publisher of response
             Flux<WebSocketMessage> webSocketResponse = response.map(session::textMessage);
-            webSocketResponse.doFinally(signalType -> log.info("The client close the connection "+signalType));
+            webSocketResponse.doFinally(signalType -> log.info("The client close the connection " + signalType));
             return session.send(webSocketResponse);
         };
     }

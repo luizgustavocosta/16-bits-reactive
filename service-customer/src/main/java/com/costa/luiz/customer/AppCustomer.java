@@ -3,7 +3,6 @@ package com.costa.luiz.customer;
 import io.r2dbc.spi.ConnectionFactory;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.reactivestreams.Subscriber;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -40,27 +39,28 @@ import static java.util.Objects.nonNull;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
+@Repository
+interface CustomerRepository extends ReactiveCrudRepository<Customer, Long> {
+}
+
 @SpringBootApplication
 public class AppCustomer {
-
-    @Bean //Explicit transaction demarcation
-    TransactionalOperator transactionalOperator(ReactiveTransactionManager reactiveTransactionManager) {
-        return TransactionalOperator.create(reactiveTransactionManager);
-    }
-
-    @Bean //Txn Management
-    ReactiveTransactionManager r2dbTransactionManager(ConnectionFactory connectionFactory) {
-        return new R2dbcTransactionManager(connectionFactory);
-    }
-
 
     public static void main(String[] args) {
         SpringApplication.run(AppCustomer.class, args);
     }
-}
 
-@Repository
-interface CustomerRepository extends ReactiveCrudRepository<Customer, Long> {
+    @Bean
+        //Explicit transaction demarcation
+    TransactionalOperator transactionalOperator(ReactiveTransactionManager reactiveTransactionManager) {
+        return TransactionalOperator.create(reactiveTransactionManager);
+    }
+
+    @Bean
+        //Txn Management
+    ReactiveTransactionManager r2dbTransactionManager(ConnectionFactory connectionFactory) {
+        return new R2dbcTransactionManager(connectionFactory);
+    }
 }
 
 @RestController
@@ -74,10 +74,10 @@ class CustomerController {
 
     @GetMapping(path = "/customers", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<Customer> findAll() {
-      return repository.findAll();
+        return repository.findAll();
     }
 
-    @GetMapping(path="/customers/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(path = "/customers/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<Customer> findAllStream() {
         Stream<Customer> customerStream = Stream.of(repository.findAll()).flatMap(this::map);
         return Flux.fromStream(customerStream);
@@ -126,11 +126,10 @@ class CustomerService {
     }
 
 
-
     private void isValid(Customer customer) {
         Assert.isTrue(nonNull(customer.getName()) &&
-                customer.getName().length() > 0 &&
-                Character.isUpperCase(customer.getName().charAt(0)),
+                        customer.getName().length() > 0 &&
+                        Character.isUpperCase(customer.getName().charAt(0)),
                 "The name must start with a capital letter");
     }
 }
@@ -155,7 +154,7 @@ class DataInitializer {
                 new Customer(null, "Joao", "", "Chad Stahelski", LocalDate.of(2021, Month.JULY, 10)));
 
         Flux<Customer> movies = Flux.fromIterable(listOfMovies).flatMap(repository::save);
-        movies.subscribe(movie -> log.info("movie ->"+movie)); // For in-memory database
+        movies.subscribe(movie -> log.info("movie ->" + movie)); // For in-memory database
 
         // For PostgreSQL
 //        repository

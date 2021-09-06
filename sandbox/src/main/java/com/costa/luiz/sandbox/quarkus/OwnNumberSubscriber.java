@@ -7,10 +7,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class OwnNumberSubscriber<T extends Number> implements Subscriber<T> {
 
-    private Subscription subscription;
-
     private final AtomicLong receivedItems = new AtomicLong();
     private final long itemsToRequest;
+    private Subscription subscription;
 
     public OwnNumberSubscriber(long itemsToRequest) {
         this.itemsToRequest = itemsToRequest;

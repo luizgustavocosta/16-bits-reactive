@@ -17,13 +17,13 @@ public class VideoPlayer implements Flow.Subscriber<VideoFrame> {
 
     @Override
     public void onNext(VideoFrame item) {
-        log.info("play #{}" , item.getNumber());
+        log.info("play #{}", item.getNumber());
         subscription.request(1);
     }
 
     @Override
     public void onError(Throwable throwable) {
-        log.error("There is an error in video streaming:{}" , throwable.getMessage());
+        log.error("There is an error in video streaming:{}", throwable.getMessage());
 
     }
 

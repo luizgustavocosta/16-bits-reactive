@@ -39,7 +39,7 @@ public class ClientForUsers {
                 })
                 .doOnComplete(() -> log.info("Received {} rows", count.get()))
                 .doOnError(throwable -> log.error(throwable.getMessage()))
-                .doOnNext(row -> log.info("ROW {}",row))
+                .doOnNext(row -> log.info("ROW {}", row))
                 .blockLast();
     }
 

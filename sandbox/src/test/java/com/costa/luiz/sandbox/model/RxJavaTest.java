@@ -1,23 +1,16 @@
 package com.costa.luiz.sandbox.model;
 
-import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.observers.TestObserver;
-import io.reactivex.rxjava3.processors.PublishProcessor;
 import io.reactivex.rxjava3.schedulers.TestScheduler;
 import io.reactivex.rxjava3.subscribers.TestSubscriber;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collector;
 
 public class RxJavaTest implements WithAssertions {
 

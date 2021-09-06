@@ -23,7 +23,7 @@ public class ReviewController {
         this.repository = repository;
     }
 
-    @GetMapping( produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<Review> findAll() {
         return repository.findAll();
     }

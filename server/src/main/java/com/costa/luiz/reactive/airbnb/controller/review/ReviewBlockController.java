@@ -1,7 +1,7 @@
 package com.costa.luiz.reactive.airbnb.controller.review;
 
-import com.costa.luiz.reactive.airbnb.model.review.Review;
 import com.costa.luiz.reactive.airbnb.infrastructure.review.ReviewBlockRepository;
+import com.costa.luiz.reactive.airbnb.model.review.Review;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

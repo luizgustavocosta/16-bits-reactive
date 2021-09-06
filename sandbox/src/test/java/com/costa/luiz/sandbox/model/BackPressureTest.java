@@ -23,7 +23,9 @@ class BackPressureTest implements WithAssertions {
     private static final int MILLIS = 10, START_INCLUSIVE = 0, END_EXCLUSIVE = 10;
     private static final int NUMBER_OF_ITEMS = 10;
 
-    private static boolean consume(Object consumeTheStream) { return true; }
+    private static boolean consume(Object consumeTheStream) {
+        return true;
+    }
 
     private Multi<Integer> createItemsByRange(int start, int end) {
         return Multi.createFrom().range(start, end);
@@ -159,7 +161,7 @@ class BackPressureTest implements WithAssertions {
 
         StepVerifier
                 .create(backPressureApproach)
-                .expectNext(0, 100, 200, 300, 400, 500,600, 700, 800, 900)
+                .expectNext(0, 100, 200, 300, 400, 500, 600, 700, 800, 900)
                 .expectComplete()
                 .verifyThenAssertThat()
                 .hasNotDiscardedElements();

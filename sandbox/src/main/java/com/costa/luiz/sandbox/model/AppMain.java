@@ -11,7 +11,7 @@ public class AppMain {
 
     public static void main(String[] args) throws InterruptedException {
         try (SubmissionPublisher<Subscriber> publisher =
-                new SubmissionPublisher<>(ForkJoinPool.commonPool(), 8)) {
+                     new SubmissionPublisher<>(ForkJoinPool.commonPool(), 8)) {
             Channel firstChannel = new Channel("16 bits", "Tech");
             Subscriber subscriber = new Subscriber("Luiz", "luizcosta@mail.com");
             publisher.subscribe(firstChannel);

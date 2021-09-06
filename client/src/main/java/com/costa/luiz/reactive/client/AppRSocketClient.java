@@ -18,6 +18,7 @@ public class AppRSocketClient {
     public static void main(String[] args) {
         SpringApplication.run(AppRSocketClient.class, args);
     }
+
     @Bean
     RSocketRequester rSocketRequester(RSocketRequester.Builder builder) {
         return builder.tcp("localhost", 7_000);

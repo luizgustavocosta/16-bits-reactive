@@ -16,11 +16,12 @@ class SubscriberTest {
                 .map(this::firstHandler)
                 .doOnNext(value -> System.out.println(value))
                 .map(this::secondHandler)
-                .onErrorContinue(((throwable, o) -> System.out.println("An problem occurs .:"+o)))
+                .onErrorContinue(((throwable, o) -> System.out.println("An problem occurs .:" + o)))
                 .doOnNext(length -> {
-                    System.out.println("the length is "+length);
+                    System.out.println("the length is " + length);
                 })
-                .subscribe();;
+                .subscribe();
+        ;
 
     }
 
@@ -34,7 +35,7 @@ class SubscriberTest {
     }
 
     private Stream<String> getDataAsStream() {
-        return Stream.of("A","B", null, "C", "D");
+        return Stream.of("A", "B", null, "C", "D");
     }
 
 

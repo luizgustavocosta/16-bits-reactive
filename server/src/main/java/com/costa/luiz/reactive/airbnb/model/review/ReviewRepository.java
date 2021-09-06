@@ -7,6 +7,8 @@ import reactor.core.publisher.Mono;
 public interface ReviewRepository {
 
     Flux<Review> findAll();
+
     Flux<Review> findAllByIdNotNull(final Pageable page);
+
     Mono<Review> findOne(String id);
 }

@@ -30,7 +30,7 @@ public class PlaygroundTest {
                 }
             }
         })
-        .subscribe(System.out::println, Throwable::printStackTrace);
+                .subscribe(System.out::println, Throwable::printStackTrace);
 
         Flowable<String> source = Flowable.fromCallable(() -> {
             Thread.sleep(1000); //  imitate expensive computation
@@ -84,7 +84,7 @@ public class PlaygroundTest {
 
             @Override
             public void onNext(String s) {
-                System.out.println("from subscriber ["+s+"]");
+                System.out.println("from subscriber [" + s + "]");
             }
 
             @Override
@@ -106,7 +106,7 @@ public class PlaygroundTest {
 
             @Override
             public void onNext(String s) {
-                System.out.println("from otherSubscriber ["+s+"]");
+                System.out.println("from otherSubscriber [" + s + "]");
             }
 
             @Override

@@ -6,6 +6,8 @@ import reactor.core.publisher.Mono;
 public interface UserRepository {
 
     Flux<User> findAllUsers();
+
     Mono<User> findOneUserBy(String id);
+
     Flux<User> findByName(String name);
 }

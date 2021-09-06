@@ -13,7 +13,7 @@ import java.util.concurrent.Flow;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Channel implements Flow.Subscriber<Subscriber>{
+public class Channel implements Flow.Subscriber<Subscriber> {
 
     private String name;
     private String theme;

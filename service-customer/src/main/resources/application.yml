@@ -1,8 +1,15 @@
 spring:
   r2dbc:
-    url: r2dbc:postgres://localhost:5432/bank
     password: admin
     username: admin
+    url: r2dbc:h2:mem:///customers
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create-drop
+  h2:
+    console:
+      enabled: true
+
+  rsocket:
+    server:
+      port: 7000

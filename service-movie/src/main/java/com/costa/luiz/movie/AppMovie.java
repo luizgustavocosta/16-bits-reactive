@@ -10,7 +10,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.repository.Tailable;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -21,6 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
+
+interface MovieRepository extends ReactiveCrudRepository<Movie, String> {
+
+    Flux<Movie> findMovieByName(String name);
+
+}
 
 @SpringBootApplication
 public class AppMovie {
@@ -53,10 +58,9 @@ class MovieService {
         repository.deleteAll()
                 .thenMany(movies)
                 .thenMany(this.repository.findAll());
-                //.subscribe(movie -> log.info("--> {}", movie));
+        //.subscribe(movie -> log.info("--> {}", movie));
     }
 }
-
 
 @RestController
 @RequestMapping("/api/v1")
@@ -79,12 +83,6 @@ class MovieController {
         log.info("Let's try find by name {}", name);
         return Flux.from(repository.findMovieByName(name));
     }
-}
-
-interface MovieRepository extends ReactiveCrudRepository<Movie, String> {
-
-    Flux<Movie> findMovieByName(String name);
-
 }
 
 @Document(collection = "movies")
