@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
+import java.time.Duration;
 import java.time.LocalDate;
 
 @SpringBootApplication
@@ -34,10 +35,17 @@ class Client {
 
     @EventListener(ApplicationReadyEvent.class)
     public void ready() {
+//        Service helding
+//        Flux<String> service = null;
+//        Flux<String> otherService = null;
+//        Flux<String> anotherService = null;
+//        Flux<String> theFastestValue = Flux.firstWithValue(service, otherService, anotherService);
+
         this.webClient.get()
                 .uri("customers")
                 .retrieve()
                 .bodyToFlux(CustomerResponse.class)
+                .timeout(Duration.ofSeconds(10))
                 //.retry(10) //number of times or
                 .onErrorMap(throwable -> new IllegalArgumentException("Provide another url"))
 //                .doOnError(throwable -> new CustomerResponse(-1L, null, null, null, null)) //Affect the result
