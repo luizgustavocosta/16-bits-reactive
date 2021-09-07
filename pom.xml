@@ -25,6 +25,7 @@
         <module>sandbox</module>
         <module>service-customer</module>
         <module>service-movie</module>
+        <module>reactive-test</module>
     </modules>
     <dependencies>
         <dependency>
