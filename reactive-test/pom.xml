@@ -83,8 +83,10 @@
                 <version>3.0.3</version>
                 <extensions>true</extensions>
                 <configuration>
+                    <baseClassForTests>com.costa.luiz.test.BaseClass</baseClassForTests>
                     <testFramework>JUNIT5</testFramework>
-                    <testMode>WEBTESTCLIENT</testMode>
+<!--                    <testMode>WEBTESTCLIENT</testMode>-->
+                    <testMode>EXPLICIT</testMode><!-- Because of Reactive-->
                 </configuration>
             </plugin>
             <plugin>
