@@ -14,11 +14,11 @@ import org.springframework.security.core.userdetails.MapReactiveUserDetailsServi
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
-@SpringBootApplication
+//@SpringBootApplication
 public class AppGatewayClient {
-    public static void main(String[] args) {
-        SpringApplication.run(AppGatewayClient.class, args);
-    }
+//    public static void main(String[] args) {
+//        SpringApplication.run(AppGatewayClient.class, args);
+//    }
 
     @Bean
     MapReactiveUserDetailsService authentication() {

@@ -64,6 +64,7 @@ class BackPressureTest implements WithAssertions {
     @Test
     @Order(2)
     @DisplayName("Buffering items")
+    @Disabled
     void bufferingItems() {
         int bufferSize = 250;
         final Multi<Object> usingBuffer = createItemUsingTheInterval(MILLIS)
@@ -81,7 +82,7 @@ class BackPressureTest implements WithAssertions {
                 .expectNextCount(nextCountExpected)
                 .expectErrorMatches(throwable -> throwable instanceof BackPressureFailure &&
                         throwable.getMessage().equals("Buffer is full due to lack of downstream consumption")
-                ).verify();
+                ).verify(Duration.ofSeconds(30));
     }
 
     /**

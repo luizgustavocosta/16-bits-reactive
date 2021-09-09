@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
 import org.springframework.web.reactive.function.client.WebClient;
 
-@SpringBootApplication
+//@SpringBootApplication
 public class AppSecureClient {
 
-    public static void main(String[] args) {
-        SpringApplication.run(AppSecureClient.class, args);
-    }
+//    public static void main(String[] args) {
+//        SpringApplication.run(AppSecureClient.class, args);
+//    }
 
     @Bean
     @Profile("secure")

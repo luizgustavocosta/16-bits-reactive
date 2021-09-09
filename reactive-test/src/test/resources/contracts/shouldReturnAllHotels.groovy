@@ -12,10 +12,10 @@ Contract.make {
     }
 
     response {
-        status(HttpStatus.OK)
+        status(HttpStatus.OK.value())
         headers {
             contentType(MediaType.APPLICATION_JSON_VALUE)
         }
-        body([["id":"99", "hotel":"Ibiza Hotel"]])
+        body([[id:"99", name:"Ibiza Hotel"]])
     }
 }

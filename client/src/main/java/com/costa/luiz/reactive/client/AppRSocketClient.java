@@ -11,13 +11,13 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.stereotype.Component;
 
-@SpringBootApplication
+//@SpringBootApplication
 public class AppRSocketClient {
 
-    @SneakyThrows
-    public static void main(String[] args) {
-        SpringApplication.run(AppRSocketClient.class, args);
-    }
+//    @SneakyThrows
+//    public static void main(String[] args) {
+//        SpringApplication.run(AppRSocketClient.class, args);
+//    }
 
     @Bean
     RSocketRequester rSocketRequester(RSocketRequester.Builder builder) {

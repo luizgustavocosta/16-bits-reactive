@@ -3,12 +3,16 @@ package com.costa.luiz.test.producer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
 import static org.mockito.Mockito.when;
@@ -16,6 +20,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @WebFluxTest
 @Import(HotelHttpConfiguration.class)
+@ContextConfiguration(classes = {HotelControllerTest.Application.class})
 class HotelControllerTest {
 
     @Autowired
@@ -36,5 +41,9 @@ class HotelControllerTest {
                 .expectBody()
                 .jsonPath("@.[0].id").isEqualTo(id)
                 .jsonPath("@.[0].name").isEqualTo(hotelName);
+    }
+
+    @SpringBootApplication(scanBasePackages = "com.costa.luiz.test")
+    public static class Application {
     }
 }

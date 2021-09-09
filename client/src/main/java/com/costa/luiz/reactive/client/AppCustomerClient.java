@@ -14,11 +14,11 @@ import reactor.core.publisher.Flux;
 import java.time.Duration;
 import java.time.LocalDate;
 
-@SpringBootApplication
+///@SpringBootApplication
 public class AppCustomerClient {
-    public static void main(String[] args) {
-        SpringApplication.run(AppCustomerClient.class, args);
-    }
+//    public static void main(String[] args) {
+//        SpringApplication.run(AppCustomerClient.class, args);
+//    }
 
     @Bean
     public WebClient webClient(WebClient.Builder builder) {

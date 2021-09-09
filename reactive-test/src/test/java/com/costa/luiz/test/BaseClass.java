@@ -12,7 +12,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Flux;
 
-@SpringBootTest(properties = "server.port=0")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)//properties = "server.port=0")
 @ExtendWith(SpringExtension.class)
 public class BaseClass {
 
@@ -24,7 +24,7 @@ public class BaseClass {
 
     @BeforeEach
     void setUp() {
-        RestAssured.baseURI = "http://localhost:" + port;
+        RestAssured.baseURI = "http://localhost:" + this.port;
         Mockito.when(repository.findAll())
                 .thenReturn(Flux.just(new Hotel(99, "Ibiza Hotel")));
 
