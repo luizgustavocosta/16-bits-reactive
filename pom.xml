@@ -26,6 +26,7 @@
         <module>service-customer</module>
         <module>service-movie</module>
         <module>reactive-test</module>
+        <module>microservice-stub-test</module>
     </modules>
     <dependencies>
         <dependency>

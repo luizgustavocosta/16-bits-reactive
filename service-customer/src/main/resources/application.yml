@@ -1,7 +1,7 @@
 spring:
-  data:
-    mongodb:
-      uri: ${MONGO_REACTIVE}
+#  data:
+#    mongodb:
+#      uri: ${MONGO_REACTIVE}
   r2dbc:
     password: admin
     username: admin
