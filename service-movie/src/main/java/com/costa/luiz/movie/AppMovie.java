@@ -1,15 +1,11 @@
 package com.costa.luiz.movie;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.repository.Tailable;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -24,6 +20,8 @@ import java.util.List;
 interface MovieRepository extends ReactiveCrudRepository<Movie, String> {
 
     Flux<Movie> findMovieByName(String name);
+    @Tailable
+    Flux<Movie> findMoviesBy();
 
 }
 
@@ -78,6 +76,11 @@ class MovieController {
         return repository.findAll();
     }
 
+    @GetMapping(path = "/movies/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    Flux<Movie> findAllStream() {
+        return repository.findMoviesBy();
+    }
+
     @GetMapping(path = "/movies/search", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     Flux<Movie> findByName(@RequestParam("name") String name) {
         log.info("Let's try find by name {}", name);
@@ -85,25 +88,3 @@ class MovieController {
     }
 }
 
-@Document(collection = "movies")
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-class Movie {
-
-    @Id
-    private String id;
-    private String name;
-    private String director;
-    private int duration;
-
-    @Override
-    public String toString() {
-        return "Movie{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", director='" + director + '\'' +
-                ", duration=" + duration +
-                '}';
-    }
-}

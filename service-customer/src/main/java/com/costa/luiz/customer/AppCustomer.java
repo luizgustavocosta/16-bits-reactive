@@ -14,24 +14,31 @@ import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.http.MediaType;
 import org.springframework.r2dbc.connection.R2dbcTransactionManager;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.ReactiveTransactionManager;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.config.CorsRegistry;
+import org.springframework.web.reactive.config.WebFluxConfigurer;
+import org.springframework.web.reactive.config.WebFluxConfigurerComposite;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.util.Objects.nonNull;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
@@ -42,6 +49,7 @@ interface CustomerRepository extends ReactiveCrudRepository<Customer, Long> {
 }
 
 @SpringBootApplication
+@EnableScheduling
 public class AppCustomer {
 
     public static void main(String[] args) {
@@ -49,13 +57,22 @@ public class AppCustomer {
     }
 
     @Bean
-        //Explicit transaction demarcation
+    public WebFluxConfigurer corsConfigurer() {
+        return new WebFluxConfigurerComposite() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedOrigins("*")
+                        .allowedMethods("*");
+            }
+        };
+    }
+
+    @Bean //Explicit transaction demarcation
     TransactionalOperator transactionalOperator(ReactiveTransactionManager reactiveTransactionManager) {
         return TransactionalOperator.create(reactiveTransactionManager);
     }
 
-    @Bean
-        //Txn Management
+    @Bean //Txn Management
     ReactiveTransactionManager r2dbTransactionManager(ConnectionFactory connectionFactory) {
         return new R2dbcTransactionManager(connectionFactory);
     }
@@ -63,38 +80,32 @@ public class AppCustomer {
 
 @RestController
 @RequestMapping("/api/v1")
+@CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 class CustomerController {
+
     private final CustomerRepository repository;
-
-    CustomerController(CustomerRepository repository) {
-        this.repository = repository;
-    }
-
-    @GetMapping(path = "/customers", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<Customer> findAll() {
-        return repository.findAll();
-    }
 
     @GetMapping(path = "/customers/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<Customer> findAllStream() {
-        Stream<Customer> customerStream = Stream.of(repository.findAll()).flatMap(this::map);
-        return Flux.fromStream(customerStream);
+        return Flux.zip(repository.findAll(), Flux.interval(Duration.ofSeconds(10)), (k, v) -> k);
     }
 
-    private Stream<Customer> map(Flux<Customer> customerFlux) {
-        return Stream.of(null);
-    }
 
     // Function reactive style endpoint
     @Bean
     RouterFunction<ServerResponse> routes(CustomerRepository repository) {
-        AtomicLong counter = new AtomicLong();
         return route()
-                .GET("/customers/stream", serverRequest ->
-                        ok().contentType(MediaType.TEXT_EVENT_STREAM)
-//                                .body(Flux.fromStream(Stream.generate(counter::incrementAndGet))
-//                                        .delayElements(Duration.ofSeconds(1)), String.class))
-                                .body(repository.findAll(), Customer.class))
+                .GET("/customers/stream", serverRequest -> {
+                    Flux<Long> interval = Flux.interval(Duration.ofSeconds(1));
+                    Flux<Customer> heartbeatEntityFlux = repository.findAll();
+                    Flux<Customer> zipped = Flux.zip(heartbeatEntityFlux, interval, (key, value) -> key);
+
+                    return ServerResponse
+                            .ok()
+                            .contentType(MediaType.TEXT_EVENT_STREAM)
+                            .body(zipped, Customer.class);
+                })
                 .GET("/customers", serverRequest -> ok().body(repository.findAll(), List.class))
                 .GET("/customers/{id}", serverRequest -> ok()
                         .body(repository.findById(Long.parseLong(serverRequest.pathVariable("id"))), Customer.class))
@@ -122,6 +133,27 @@ class CustomerService {
         // or
         //@EnableTransactionManagement + method public
         //return customers;
+    }
+
+    @Scheduled(fixedRate = 2_000)
+    void createNewCustomer() {
+        repository.save(new Customer(null, randomString(), null, null, LocalDate.now()))
+//                .log()
+                .then()
+                .subscribe();
+    }
+
+    private static String randomString() {
+        int lower = 'A';
+        int upper = 'Z';
+
+        return IntStream.range(0, 10)
+                .mapToObj(i -> {
+                    double range = upper - lower;
+                    char charIdx = ((char) (lower + (range * Math.random())));
+                    return new String(new char[]{charIdx});
+                })
+                .collect(Collectors.joining());
     }
 
 
